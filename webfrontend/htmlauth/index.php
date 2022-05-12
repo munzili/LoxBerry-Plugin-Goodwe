@@ -26,12 +26,12 @@ if (isset($_POST['save'])) {
 
         for($i = 1; $i <= $turns; $i++)
         {
-            $cron .= "\n* * * * * loxberry sleep " . (($i*$config['TimeAmount']) - $config['TimeAmount']) . "; timeout {$config['TimeAmount']}s php $lbpbindir/importData.php";
+            $cron .= "\n* * * * * loxberry sleep " . (($i*$config['TimeAmount']) - $config['TimeAmount']) . "; timeout {$config['TimeAmount']}s /usr/bin/php $lbpbindir/importData.php";
         }
     }
     else
     {
-        $cron .= "\n*/{$config['TimeAmount']} * * * * loxberry timeout 60s php $lbpbindir/importData.php";        
+        $cron .= "\n*/{$config['TimeAmount']} * * * * loxberry timeout 60s /usr/bin/php $lbpbindir/importData.php";        
     }
 
     file_put_contents("/tmp/$lbpplugindir", $cron);
