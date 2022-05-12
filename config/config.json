@@ -1,6 +1,1 @@
-{
-    "ConfigStructureVersion": "1.0.0",
-    "InverterIP": "192.168.0.56",
-    "RepeatSeconds": 30,
-    "RepeatMinutes": -1
-}
+{"ConfigStructureVersion":"1.0.0","InverterIP":"","TimeAmount":"30","TimeUnit":"0"}
