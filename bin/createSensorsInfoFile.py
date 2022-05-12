@@ -1,9 +1,6 @@
 import asyncio
 import goodwe
 import json
-import subprocess
-import os
-import tempfile
 import sys
 
 async def get_runtime_data():
@@ -16,4 +13,8 @@ async def get_runtime_data():
     with open(dataPath + "/sensors.json", "w") as outfile:
         json.dump(sensors, outfile, default=str)
 
-asyncio.run(get_runtime_data())
+try:
+    asyncio.run(get_runtime_data())
+    sys.exit(0)
+except Exception:
+    sys.exit(1)

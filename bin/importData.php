@@ -10,27 +10,27 @@ $cfg = new LBJSON("$lbpconfigdir/config.json");
 
 if(!file_exists($lbpdatadir . "/sensors.json"))
 {
-    exec("python3 $lbpbindir/fetchInverterData.py {$cfg->InverterIP} $lbpdatadir", null, $result_code);    
+    exec("python3 $lbpbindir/createSensorsInfoFile.py \"{$cfg->InverterIP}\" \"$lbpdatadir\"", $output, $result_code);
     
     if($result_code != 0)
     {
-        notify( $lbpplugindir, "cron-python", "The python 'sensors data' import script returned an error: $result_code", true);
-        exit 1;
+        notify(LBPPLUGINDIR, "cron-python", "The python 'sensors data' import script returned an error: $result_code $output", true);
+        exit(1);
     }
 }
 
-exec("python3 $lbpbindir/fetchInverterData.py {$cfg->InverterIP} $lbpdatadir", null, $result_code);
+exec("python3 $lbpbindir/fetchInverterData.py \"{$cfg->InverterIP}\"", $output, $result_code);
 
 if($result_code != 0)
 {
-    notify( $lbpplugindir, "cron-python", "The python 'inverter data' import script returned an error: $result_code", true);
-    exit 1;
+    notify(LBPPLUGINDIR, "cron-python", "The python 'inverter data' import script returned an error: $result_code $output", true);
+    exit(1);
 }
 
-if(!file_exists($lbpdatadir . "/data.json") || !file_exists($lbpdatadir . "/sensors.json"))
+if(empty($output) || !file_exists($lbpdatadir . "/sensors.json"))
 {
-    notify( $lbpplugindir, "cron-php", "No data and sensors file found", true);
-    exit 1;
+    notify(LBPPLUGINDIR, "cron-php", "No data or sensor file found", true);
+    exit(1);
 }
 
 // Get the MQTT Gateway connection details from LoxBerry
@@ -39,8 +39,7 @@ $creds = mqtt_connectiondetails();
 // MQTT requires a unique client id
 $client_id = uniqid(gethostname()."_client");
 
-$dataFile = file_get_contents($lbpdatadir . "/data.json");
-$datas = json_decode($dataFile, true);
+$datas = json_decode($output[0], true);
 
 $sensorsFile = file_get_contents($lbpdatadir . "/sensors.json");
 $sensors = json_decode($sensorsFile, true);
@@ -61,5 +60,3 @@ if( $mqtt->connect(true, NULL, $creds['brokeruser'], $creds['brokerpass'] ) ) {
 } else {
     echo "MQTT connection failed";
 }
-
-unlink($lbpdatadir . "/data.json");
