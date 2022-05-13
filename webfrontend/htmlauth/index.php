@@ -34,6 +34,8 @@ if (isset($_POST['save'])) {
         $cron .= "\n*/{$config['TimeAmount']} * * * * loxberry timeout 60s /usr/bin/php $lbpbindir/importData.php";        
     }
 
+    $cron .= "\n";
+
     file_put_contents("/tmp/$lbpplugindir", $cron);
 
     exec("sudo $lbhomedir/sbin/installcrontab.sh $lbpplugindir /tmp/$lbpplugindir", $output, $result_code);
