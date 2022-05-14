@@ -46,7 +46,7 @@ PSBIN=$LBPSBIN/$PDIR
 PBIN=$LBPBIN/$PDIR
 
 cho "<INFO> Copy back existing config files"
-cp -p -v -r /tmp/$PSHNAME\_upgrade/config/* $PCONFIG/ 
+cp -p -v -r /tmp/$PSHNAME\_upgrade/config/* $PCONFIG/   
 
 echo "<INFO> Remove temporary folders"
 rm -rf /tmp/$PSHNAME
