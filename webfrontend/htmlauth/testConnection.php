@@ -150,6 +150,6 @@ if(!$gotError)
 echo "<br/>";
 
 if($gotError)
-    echo "<p><b style='color:red'>Verbindung fehlerhaft!</b></p>";
+    echo "<p><b style='color:red'>{$L['TEST.RESULT_ERROR']}</b></p>";
 else
-    echo "<p><b style='color:green'>Verbindung OK!</b></p>";
+    echo "<p><b style='color:green'>{$L['TEST.RESULT_OK']}</b></p>";
