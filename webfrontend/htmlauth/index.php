@@ -83,12 +83,31 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
     {
         validate_enable('#InverterIP');
         validate_enable('#TimeAmount');
+
+        $("#testConnection").click(function(e) {
+            $.ajax({
+                type: "POST",
+                url: "testConnection.php",
+                data: { 
+                    ip: $("#InverterIP").val(),
+                    debug: $("#checkbox-debug").prop("checked") == true ? 1 : 0
+                },
+                beforeSend: function() {                    
+                    $( '#testConnectionResultContainer' ).text("<?=$L['MAIN.TEST_LOADING']?>");
+                },
+                success: function(result) {
+                    $( '#testConnectionResultContainer' ).html("<div class='ui-body ui-body-a ui-corner-all' style='overflow:auto;width=100%'>" + result + "</div>").trigger('create');
+                },
+                error: function(result) {
+                    $( '#testConnectionResultContainer' ).html("<p style='color:red;'><?=$L['MAIN.TEST_CONNECTION_LOAD_ERROR']?></p>").trigger('create');
+                }
+            });
+        });
     });
 </script>
 <p><?=$L['MAIN.INTRO']?></p>
 <form action="index.php" method="post">
-    <div class="ui-body ui-body-a ui-corner-all" >
-        
+    <div class="ui-body ui-body-a ui-corner-all" >        
         <div class="ui-grid-b">
             <div class="ui-block-a">
                 <label for="InverterIP" style="text-align:left;"><?= $L['MAIN.IP'] ?></label>
@@ -101,7 +120,15 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
                 <?= $scan_result ?>
             </div>
         </div>
-        <br/>
+        <div class="ui-grid-a">
+            <div class="ui-block-a" style="width:25%">                            
+                <input type="button" id="testConnection" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-left" data-mini="true" value="<?= $L['MAIN.TEST_CONNECTION'] ?>"/>
+                <input type="checkbox" name="checkbox-debug" id="checkbox-debug" data-mini="true" />
+                <label for="checkbox-debug"><?= $L['MAIN.TEST_CONNECTION_DEBUG'] ?></label>
+            </div>
+            <div class="ui-block-b" id="testConnectionResultContainer" style="padding-left:5pt; width:75%; overflow:auto">                
+            </div>
+        </div>
         <label for="TimeAmount" style="text-align:left;"><?= $L['MAIN.TIME'] ?></label>
         <input data-inline="true" data-mini="true" name="TimeAmount" id="TimeAmount" value="<?= $config['TimeAmount'] ?>" type="text" data-validation-rule="special:number-min-max-digits:1:60">
         <fieldset data-role="controlgroup" data-type="horizontal">
