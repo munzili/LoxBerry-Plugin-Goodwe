@@ -17,7 +17,7 @@ function TestError($output, $error)
 
     if($debug)
     {
-        echo "<div style='padding-left:40pt'><b>Fehler</b><br/><pre>" . htmlspecialchars($error) . "</pre><br/><b>Ausgabe</b><pre>" . htmlspecialchars($output) . "</pre></div><br/>";
+        echo "<div style='padding-left:40pt'><b>{$L['TEST.OUTPUT_ERROR']}</b><br/><pre>" . htmlspecialchars($error) . "</pre><br/><b>{$L['TEST.OUTPUT_RESULT']}</b><pre>" . htmlspecialchars($output) . "</pre></div><br/>";
     }
 }
 
