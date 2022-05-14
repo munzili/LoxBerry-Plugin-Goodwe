@@ -57,7 +57,7 @@ $creds = mqtt_connectiondetails();
 // MQTT requires a unique client id
 $client_id = uniqid(gethostname()."_client");
 
-$datas = json_decode($output[0], true);
+$datas = json_decode($output, true);
 
 $sensorsFile = file_get_contents($lbpdatadir . "/sensors.json");
 $sensors = json_decode($sensorsFile, true);
