@@ -9,19 +9,20 @@ $file_log  = $lbplogdir . '/goodwe.log';
 $scan_result = "";
 
 if (isset($_POST['save'])) {
-    
+
     $config = json_decode(file_get_contents($file_config), true);
     $config['InverterIP'] = $_POST['InverterIP'];
     $config['TimeAmount'] = $_POST['TimeAmount'];
     $config['TimeUnit'] = $_POST['TimeUnit'];
+    $config['Topic'] = $_POST['Topic'];
     file_put_contents($file_config, json_encode($config));
 
     copy("$lbhomedir/system/cron/cron.d/$lbpplugindir", "/tmp/$lbpplugindir");
     $cron = file_get_contents("/tmp/$lbpplugindir");
     $cron = explode("# ---TEMPLATE---", $cron)[0] . "# ---TEMPLATE---";
-    
+
     if($config['TimeUnit'] == 0)
-    {        
+    {
         $turns = 60 / $config['TimeAmount'];
 
         for($i = 1; $i <= $turns; $i++)
@@ -31,7 +32,7 @@ if (isset($_POST['save'])) {
     }
     else
     {
-        $cron .= "\n*/{$config['TimeAmount']} * * * * loxberry timeout 60s /usr/bin/php $lbpbindir/importData.php";        
+        $cron .= "\n*/{$config['TimeAmount']} * * * * loxberry timeout 60s /usr/bin/php $lbpbindir/importData.php";
     }
 
     $cron .= "\n";
@@ -82,17 +83,18 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
     $( document ).ready(function()
     {
         validate_enable('#InverterIP');
+        validate_enable('#Topic');
         validate_enable('#TimeAmount');
 
         $("#testConnection").click(function(e) {
             $.ajax({
                 type: "POST",
                 url: "testConnection.php",
-                data: { 
+                data: {
                     ip: $("#InverterIP").val(),
                     debug: $("#checkbox-debug").prop("checked") == true ? 1 : 0
                 },
-                beforeSend: function() {                    
+                beforeSend: function() {
                     $( '#testConnectionResultContainer' ).text("<?=$L['MAIN.TEST_LOADING']?>");
                 },
                 success: function(result) {
@@ -107,7 +109,7 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
 </script>
 <p><?=$L['MAIN.INTRO']?></p>
 <form action="index.php" method="post">
-    <div class="ui-body ui-body-a ui-corner-all" >        
+    <div class="ui-body ui-body-a ui-corner-all">
         <div class="ui-grid-b">
             <div class="ui-block-a">
                 <label for="InverterIP" style="text-align:left;"><?= $L['MAIN.IP'] ?></label>
@@ -121,14 +123,16 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
             </div>
         </div>
         <div class="ui-grid-a">
-            <div class="ui-block-a" style="width:25%">                            
+            <div class="ui-block-a" style="width:25%">
                 <input type="button" id="testConnection" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-left" data-mini="true" value="<?= $L['MAIN.TEST_CONNECTION'] ?>"/>
                 <input type="checkbox" name="checkbox-debug" id="checkbox-debug" data-mini="true" />
                 <label for="checkbox-debug"><?= $L['MAIN.TEST_CONNECTION_DEBUG'] ?></label>
             </div>
-            <div class="ui-block-b" id="testConnectionResultContainer" style="padding-left:5pt; width:75%; overflow:auto">                
+            <div class="ui-block-b" id="testConnectionResultContainer" style="padding-left:5pt; width:75%; overflow:auto">
             </div>
         </div>
+        <label for="Topic" style="text-align:left;"><?= $L['MAIN.MQTT_TOPIC'] ?></label>
+        <input data-inline="true" data-mini="true" name="Topic" id="Topic" value="<?= $config['Topic'] ?>" type="text" data-validation-rule="^(?!.*\/$)[\w\/+-:~.]+$" required>
         <label for="TimeAmount" style="text-align:left;"><?= $L['MAIN.TIME'] ?></label>
         <input data-inline="true" data-mini="true" name="TimeAmount" id="TimeAmount" value="<?= $config['TimeAmount'] ?>" type="text" data-validation-rule="special:number-min-max-digits:1:60">
         <fieldset data-role="controlgroup" data-type="horizontal">

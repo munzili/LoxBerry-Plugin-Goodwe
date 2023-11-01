@@ -6,7 +6,7 @@
 # userfiles from /tmp back to the system. Use with caution and remember, that
 # all systems may be different!
 #
-# Exit code must be 0 if executed successfull. 
+# Exit code must be 0 if executed successfull.
 # Exit code 1 gives a warning but continues installation.
 # Exit code 2 cancels installation.
 #
@@ -46,7 +46,15 @@ PSBIN=$LBPSBIN/$PDIR
 PBIN=$LBPBIN/$PDIR
 
 cho "<INFO> Copy back existing config files"
-cp -p -v -r /tmp/$PSHNAME\_upgrade/config/* $PCONFIG/   
+cp -p -v -r /tmp/$PSHNAME\_upgrade/config/* $PCONFIG/
+
+configVersion = $(jq -r '.ConfigStructureVersion' $PCONFIG/config.json)
+
+if $configVersion eq "1.0.0"
+    newConfig = `jq '.ConfigStructureVersion = "1.1.0"' $PCONFIG/config.json`
+    newConfig = `echo $newConfig | jq '.Topic = "goodwe"'`
+    echo $newConfig | jq "." > $PCONFIG/config.json
+fi
 
 echo "<INFO> Remove temporary folders"
 rm -rf /tmp/$PSHNAME

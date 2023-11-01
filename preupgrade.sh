@@ -2,11 +2,11 @@
 
 # Bash script which is executed in case of an update (if this plugin is already
 # installed on the system). This script is executed as very first step (*BEFORE*
-# preinstall.sh) and can be used e.g. to save existing configfiles to /tmp 
+# preinstall.sh) and can be used e.g. to save existing configfiles to /tmp
 # during installation. Use with caution and remember, that all systems may be
 # different!
 #
-# Exit code must be 0 if executed successfull. 
+# Exit code must be 0 if executed successfull.
 # Exit code 1 gives a warning but continues installation.
 # Exit code 2 cancels installation.
 #
