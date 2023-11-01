@@ -86,6 +86,8 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
         validate_enable('#Topic');
         validate_enable('#TimeAmount');
 
+        validate_chk_object(['#InverterIP', '#Topic', '#TimeAmount']);
+
         $("#testConnection").click(function(e) {
             $.ajax({
                 type: "POST",
@@ -113,7 +115,7 @@ LBWeb::lbheader($template_title, $helplink, $helptemplate);
         <div class="ui-grid-b">
             <div class="ui-block-a">
                 <label for="InverterIP" style="text-align:left;"><?= $L['MAIN.IP'] ?></label>
-                <input data-inline="true" data-mini="true" name="InverterIP" id="InverterIP" value="<?= $config['InverterIP'] ?>" type="text" data-validation-rule="special:ipaddr">
+                <input data-inline="true" data-mini="true" name="InverterIP" id="InverterIP" value="<?= $config['InverterIP'] ?>" type="text" data-validation-rule="special:ipaddr" required>
             </div>
             <div class="ui-block-b" style="margin-top: 10pt; text-align:right">
                 <button type="submit" name="scanInverter" class="ui-btn ui-btn-inline ui-icon-search ui-btn-icon-left"><?= $L['MAIN.SEARCH_INVERTER'] ?></button>

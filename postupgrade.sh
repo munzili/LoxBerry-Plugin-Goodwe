@@ -45,15 +45,18 @@ PCONFIG=$LBPCONFIG/$PDIR
 PSBIN=$LBPSBIN/$PDIR
 PBIN=$LBPBIN/$PDIR
 
-cho "<INFO> Copy back existing config files"
-cp -p -v -r /tmp/$PSHNAME\_upgrade/config/* $PCONFIG/
+echo "<INFO> Copy back existing config files"
+cp -p -v -r /tmp/$PSHNAME/\_upgrade/config/* $PCONFIG/
 
-configVersion = $(jq -r '.ConfigStructureVersion' $PCONFIG/config.json)
+configVersion=$(jq -r '.ConfigStructureVersion' $PCONFIG/config.json)
 
-if $configVersion eq "1.0.0"
-    newConfig = `jq '.ConfigStructureVersion = "1.1.0"' $PCONFIG/config.json`
-    newConfig = `echo $newConfig | jq '.Topic = "goodwe"'`
+echo "<INFO> Old config version found $configVersion"
+if [ "$configVersion" = "1.0.0" ]; then
+    echo "<INFO> Upgrading config file from version 1.0.0 to 1.1.0"
+    newConfig=`jq '.ConfigStructureVersion = "1.1.0"' $PCONFIG/config.json`
+    newConfig=`echo $newConfig | jq '.Topic = "goodwe"'`
     echo $newConfig | jq "." > $PCONFIG/config.json
+    echo "<INFO> Wrote $newConfig"
 fi
 
 echo "<INFO> Remove temporary folders"

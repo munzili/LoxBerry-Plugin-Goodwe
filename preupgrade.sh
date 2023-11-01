@@ -46,11 +46,11 @@ PSBIN=$LBPSBIN/$PDIR
 PBIN=$LBPBIN/$PDIR
 
 echo "<INFO> Creating temporary folders for upgrading"
-mkdir -p /tmp/$PSHNAME\_upgrade
-mkdir -p /tmp/$PSHNAME\_upgrade/config
+mkdir -p /tmp/$PSHNAME/\_upgrade
+mkdir -p /tmp/$PSHNAME/\_upgrade/config
 
 echo "<INFO> Backing up existing config files"
-cp -p -v -r $PCONFIG/ /tmp/$PSHNAME\_upgrade/config
+cp -p -v -r $PCONFIG/* /tmp/$PSHNAME/\_upgrade/config
 
 # Exit with Status 0
 exit 0
