@@ -22,6 +22,7 @@ function runCmd($command, &$output, &$error)
 }
 
 $cfg = new LBJSON("$lbpconfigdir/config.json");
+$topic = $cfg->Topic;
 
 if(php_sapi_name() === 'cli' && isset($argv[1]))
     $cfg->InverterIP = $argv[1];
@@ -71,7 +72,7 @@ if( $mqtt->connect(true, NULL, $creds['brokeruser'], $creds['brokerpass'] ) ) {
 
         if(isset($datas[$sensorName]))
         {
-            $mqtt->publish("{$cfg->Topic}/$sensorName", $datas[$sensorName], 0, 1);
+            $mqtt->publish("$topic/$sensorName", $datas[$sensorName], 0, 1);
         }
     }
     $mqtt->close();
